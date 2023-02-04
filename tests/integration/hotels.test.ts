@@ -79,12 +79,12 @@ describe("GET /hotels", () => {
       expect(response.status).toEqual(httpStatus.PAYMENT_REQUIRED);
     });
 
-    it("should respond with status 402 when ticket does not include hotel", async () => {
+    it("should respond with status 402 when TicketType is remote", async () => {
       const user = await createUser();
       const token = await generateValidToken(user);
       const enrollment = await createEnrollmentWithAddress(user);
       const ticketType = await createTicketType({
-        isRemote: false,
+        isRemote: true,
         includesHotel: false,
       });
       await createTicket(enrollment.id, ticketType.id, TicketStatus.RESERVED);
@@ -94,12 +94,12 @@ describe("GET /hotels", () => {
       expect(response.status).toEqual(httpStatus.PAYMENT_REQUIRED);
     });
 
-    it("should respond with status 402 when ticket is remote", async () => {
+    it("should respond with status 402 when TicketType does not include hotel", async () => {
       const user = await createUser();
       const token = await generateValidToken(user);
       const enrollment = await createEnrollmentWithAddress(user);
       const ticketType = await createTicketType({
-        isRemote: true,
+        isRemote: false,
         includesHotel: false,
       });
       await createTicket(enrollment.id, ticketType.id, TicketStatus.RESERVED);
@@ -211,12 +211,12 @@ describe("GET /hotels/:hotelId", () => {
       expect(response.status).toEqual(httpStatus.PAYMENT_REQUIRED);
     });
 
-    it("should respond with status 402 when ticket does not include hotel", async () => {
+    it("should respond with status 402 when ticket is remote", async () => {
       const user = await createUser();
       const token = await generateValidToken(user);
       const enrollment = await createEnrollmentWithAddress(user);
       const ticketType = await createTicketType({
-        isRemote: false,
+        isRemote: true,
         includesHotel: false,
       });
       await createTicket(enrollment.id, ticketType.id, TicketStatus.RESERVED);
@@ -225,12 +225,12 @@ describe("GET /hotels/:hotelId", () => {
       expect(response.status).toEqual(httpStatus.PAYMENT_REQUIRED);
     });
 
-    it("should respond with status 402 when ticket is remote", async () => {
+    it("should respond with status 402 when ticket does not include hotel", async () => {
       const user = await createUser();
       const token = await generateValidToken(user);
       const enrollment = await createEnrollmentWithAddress(user);
       const ticketType = await createTicketType({
-        isRemote: true,
+        isRemote: false,
         includesHotel: false,
       });
       await createTicket(enrollment.id, ticketType.id, TicketStatus.RESERVED);

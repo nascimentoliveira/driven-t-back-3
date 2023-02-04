@@ -3,7 +3,7 @@ import hotelService from "@/services/hotels-service";
 import { Response } from "express";
 import httpStatus from "http-status";
 
-export async function getHotels(req: AuthenticatedRequest, res: Response) {
+export async function getHotels(req: AuthenticatedRequest, res: Response): Promise<Response> {
   const { userId } = req;
   try {
     const hotels = await hotelService.getHotels(userId);
@@ -19,7 +19,7 @@ export async function getHotels(req: AuthenticatedRequest, res: Response) {
   }
 }
 
-export async function getHotelById(req: AuthenticatedRequest, res: Response) {
+export async function getHotelById(req: AuthenticatedRequest, res: Response): Promise<Response> {
   const { userId } = req;
   try {
     const hotelId = Number(req.params.hotelId);

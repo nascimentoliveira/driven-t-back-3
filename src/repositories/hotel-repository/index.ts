@@ -1,15 +1,16 @@
 import { prisma } from "@/config";
+import { Hotel, Room } from "@prisma/client";
 
-async function getHotels() {
-  return await prisma.hotel.findMany({
+function getHotels(): Promise<(Hotel & { Rooms: Room[] })[]> {
+  return prisma.hotel.findMany({
     include: {
       Rooms: true,
     },
   });
 }
 
-async function getHotelById(id: number) {
-  return await prisma.hotel.findUnique({
+function getHotelById(id: number): Promise<(Hotel & { Rooms: Room[] })> {
+  return prisma.hotel.findUnique({
     where: {
       id,
     },

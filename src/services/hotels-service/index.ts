@@ -3,14 +3,14 @@ import { paymentRequiredError } from "@/errors/payment-required-error";
 import enrollmentRepository from "@/repositories/enrollment-repository";
 import hotelRepository from "@/repositories/hotel-repository";
 import ticketRepository from "@/repositories/ticket-repository";
-import { TicketStatus } from "@prisma/client";
+import { Hotel, Room, TicketStatus } from "@prisma/client";
 
-async function getHotels(userId: number) {
+async function getHotels(userId: number): Promise<(Hotel & { Rooms: Room[] })[]> {
   await verifyEnrollAndTicketWithHotelPaid(userId);
   return await hotelRepository.getHotels();
 }
 
-async function getHotelById(userId: number, id: number) {
+async function getHotelById(userId: number, id: number): Promise<(Hotel & { Rooms: Room[] })> {
   await verifyEnrollAndTicketWithHotelPaid(userId);
   const hotel = await hotelRepository.getHotelById(id);
   if (!hotel) {
@@ -19,7 +19,7 @@ async function getHotelById(userId: number, id: number) {
   return hotel;
 }
 
-async function verifyEnrollAndTicketWithHotelPaid(userId: number) {
+async function verifyEnrollAndTicketWithHotelPaid(userId: number): Promise<void> {
   const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
   if (!enrollment) {
     throw notFoundError();
