@@ -109,7 +109,22 @@ describe("GET /hotels", () => {
       expect(response.status).toEqual(httpStatus.PAYMENT_REQUIRED);
     });
 
-    it("should respond with status 200 and with hotels data", async () => {
+    it("should respond with status 200 with empty hotels data", async () => {
+      const user = await createUser();
+      const token = await generateValidToken(user);
+      const enrollment = await createEnrollmentWithAddress(user);
+      const ticketType = await createTicketType({
+        isRemote: false,
+        includesHotel: true,
+      });
+      const ticket = await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
+      await createPayment(ticket.id, ticketType.price);
+      const response = await server.get("/hotels").set("Authorization", `Bearer ${token}`);
+      expect(response.status).toEqual(httpStatus.OK);
+      expect(response.body).toEqual(expect.arrayContaining([]));
+    });
+
+    it("should respond with status 200 with hotels data", async () => {
       const user = await createUser();
       const token = await generateValidToken(user);
       const enrollment = await createEnrollmentWithAddress(user);
@@ -239,7 +254,7 @@ describe("GET /hotels/:hotelId", () => {
       expect(response.status).toEqual(httpStatus.PAYMENT_REQUIRED);
     });
 
-    it("should respond with status 200 and with hotels data", async () => {
+    it("should respond with status 200 with hotels data", async () => {
       const user = await createUser();
       const token = await generateValidToken(user);
       const enrollment = await createEnrollmentWithAddress(user);
